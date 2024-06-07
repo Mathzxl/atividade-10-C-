@@ -1,141 +1,78 @@
-﻿using System;
-using System.IO;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
 
-class Program
+namespace _1
 {
-    static void Main(string[] args)
+    class Program
     {
-        string caminhoArquivo = "estudantes.txt";
-        StreamReader leitor = new StreamReader(caminhoArquivo);
-
-        int quantidadeLinhas = ContabilizarLinhas(leitor);
-        leitor.BaseStream.Seek(0, SeekOrigin.Begin); // Resetar a posição do leitor
-        leitor.DiscardBufferedData();
-
-        string[] nomes = ObterNomes(leitor, quantidadeLinhas);
-        leitor.BaseStream.Seek(0, SeekOrigin.Begin);
-        leitor.DiscardBufferedData();
-
-        double[] medias = CalcularMedias(leitor, quantidadeLinhas);
-
-        EscreverEstudantesAprovados(nomes, medias, "aprovados.txt");
-        EscreverEstudantesReprovados(nomes, medias, "reprovados.txt");
-        EscreverEstudantesOrdenadosPorMedia(nomes, medias, "ordenados_por_media.txt");
-
-        double maiorNota = ObterMaiorNota(leitor);
-        Console.WriteLine("A maior nota geral é: " + maiorNota);
-
-        ImprimirDadosEstudantes(nomes, medias);
-
-        leitor.Close();
-    }
-
-    static int ContabilizarLinhas(StreamReader leitor)
-    {
-        int quantidadeLinhas = 0;
-        while (leitor.ReadLine() != null)
+        static int L(StreamReader leitor)
         {
-            quantidadeLinhas++;
-        }
-        return quantidadeLinhas;
-    }
-
-    static string[] ObterNomes(StreamReader leitor, int quantidadeLinhas)
-    {
-        string[] nomes = new string[quantidadeLinhas];
-        for (int i = 0; i < quantidadeLinhas; i++)
-        {
-            string linha = leitor.ReadLine();
-            string[] dados = linha.Split(' ');
-            nomes[i] = dados[0];
-        }
-        return nomes;
-    }
-
-    static double[] CalcularMedias(StreamReader leitor, int quantidadeLinhas)
-    {
-        double[] medias = new double[quantidadeLinhas];
-        for (int i = 0; i < quantidadeLinhas; i++)
-        {
-            string linha = leitor.ReadLine();
-            string[] dados = linha.Split(' ');
-            double nota1 = Convert.ToDouble(dados[1]);
-            double nota2 = Convert.ToDouble(dados[2]);
-            double nota3 = Convert.ToDouble(dados[3]);
-            medias[i] = (nota1 + nota2 + nota3) / 3;
-        }
-        return medias;
-    }
-
-    static void EscreverEstudantesAprovados(string[] nomes, double[] medias, string caminhoArquivo)
-    {
-        using (StreamWriter escritor = new StreamWriter(caminhoArquivo))
-        {
-            for (int i = 0; i < nomes.Length; i++)
+            string linhas;
+            linhas = leitor.ReadLine();
+            int quantidadeLinhas = 0;
+            while (linhas != null)
             {
-                if (medias[i] >= 6.0)
-                {
-                    escritor.WriteLine(nomes[i] + " " + medias[i].ToString("F2"));
-                }
+                quantidadeLinhas++;
+                linhas = leitor.ReadLine();
             }
+            return quantidadeLinhas;
         }
-    }
-
-    static void EscreverEstudantesReprovados(string[] nomes, double[] medias, string caminhoArquivo)
-    {
-        using (StreamWriter escritor = new StreamWriter(caminhoArquivo))
+        static string[] ON(StreamReader leitor, int ql)
         {
-            for (int i = 0; i < nomes.Length; i++)
+            string linhas;
+            linhas = leitor.ReadLine();
+            string[] nomes = new string[ql];
+            string[] dados;
+            int i = 0;
+            while (linhas != null)
             {
-                if (medias[i] < 6.0)
-                {
-                    escritor.WriteLine(nomes[i] + " " + medias[i].ToString("F2"));
-                }
+                dados = linhas.Split(' ');
+                nomes[i] = dados[1];
+                Console.WriteLine(nomes[i]);
+                i++;
+                linhas = leitor.ReadLine();
             }
+            return nomes;
         }
-    }
-
-    static void EscreverEstudantesOrdenadosPorMedia(string[] nomes, double[] medias, string caminhoArquivo)
-    {
-        var estudantes = nomes.Zip(medias, (nome, media) => new { Nome = nome, Media = media })
-                              .OrderByDescending(estudante => estudante.Media)
-                              .ToList();
-
-        using (StreamWriter escritor = new StreamWriter(caminhoArquivo))
+        static double[] CM(StreamReader leitor, int ql)
         {
-            foreach (var estudante in estudantes)
+            string linhas;
+            linhas = leitor.ReadLine();
+            double[] medias = new double[ql];
+            string[] dados;
+            int i = 0;
+            while (linhas != null)
             {
-                escritor.WriteLine(estudante.Nome + " " + estudante.Media.ToString("F2"));
+                dados = linhas.Split(' ');
+                double nota1 = double.Parse(dados[2]);
+                double nota2 = double.Parse(dados[3]);
+                double nota3 = double.Parse(dados[4]);
+                medias[i] = (nota1 + nota2 + nota3) / 3;
+                Console.WriteLine(medias[i]);
+                i++;
+                linhas = leitor.ReadLine();
             }
+            return medias;
         }
-    }
-
-    static double ObterMaiorNota(StreamReader leitor)
-    {
-        double maiorNota = 0;
-        string linha;
-        while ((linha = leitor.ReadLine()) != null)
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Linha lida: {linha}"); // Mensagem de depuração
-            string[] dados = linha.Split(' ');
-            for (int i = 1; i < dados.Length; i++)
-            {
-                Console.WriteLine($"Nota atual: {dados[i]}"); // Mensagem de depuração
-                double nota = Convert.ToDouble(dados[i]);
-                maiorNota = Math.Max(maiorNota, nota);
-            }
+            int linha;
+            StreamReader arq = new StreamReader("lista_atp_10_arquivos.txt", Encoding.UTF8);
+            linha = L(arq);
+            Console.WriteLine(linha);
+            arq.Close();
+            arq = new StreamReader("lista_atp_10_arquivos.txt", Encoding.UTF8);
+            string[] nomes;
+            nomes = ON(arq, linha);
+            arq.Close();
+            arq = new StreamReader("lista_atp_10_arquivos.txt", Encoding.UTF8);
+            double[] ma;
+            ma = CM(arq, linha);
+            Console.ReadLine();
         }
-        return maiorNota;
-    }
-
-
-    static void ImprimirDadosEstudantes(string[] nomes, double[] medias)
-    {
-        for (int i = 0; i < nomes.Length; i++)
-        {
-            Console.WriteLine(nomes[i] + ": " + medias[i].ToString("F2"));
-        }
-        Console.ReadLine();
     }
 }
