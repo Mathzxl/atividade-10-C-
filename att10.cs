@@ -82,7 +82,7 @@ namespace _1
         }
         static void DadosEstudantes(string[] nomes, double[] cm)
         {
-            StreamWriter sorted = new StreamWriter("C:\\Users\\\\source\\repos\\atividade10\\atividade10\\bin\\Debug\\DadosEstudantes.txt");
+            StreamWriter sorted = new StreamWriter("C:\\Users\\Mathzz\\source\\repos\\atividade10\\atividade10\\bin\\Debug\\DadosEstudantes.txt");
             double[] sortr = cm;
             Array.Sort(sortr, nomes);
             Array.Reverse(sortr);
